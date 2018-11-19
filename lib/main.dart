@@ -20,11 +20,10 @@ class RandomWords extends StatefulWidget {
 
 class RandomWordsState extends State<RandomWords> {
   final _suggestions = <WordPair>[];
+  final _saved = new Set<WordPair>();
   final _biggerFont = const TextStyle(fontSize: 18.0);
   @override
   Widget build(BuildContext context) {
-    // final wordPair = new WordPair.random();
-    // return new Text(wordPair.asPascalCase);
     return new Scaffold(
       appBar: new AppBar(
         title: new Text('Startup Name Genrator'),
@@ -46,11 +45,25 @@ class RandomWordsState extends State<RandomWords> {
     );
   }
   Widget _buildRow(WordPair pair) {
+    final alreadySaved = _saved.contains(pair);
     return new ListTile(
       title: new Text(
         pair.asPascalCase,
         style: _biggerFont,
       ),
+      trailing: new Icon(
+        alreadySaved ? Icons.favorite : Icons.favorite_border,
+        color: alreadySaved ? Colors.red : null,
+      ),
+      onTap: () {
+        setState(() { // 此方法会触发State的build方法.
+          if (alreadySaved) {
+            _saved.remove(pair);
+          } else {
+            _saved.add(pair);
+          }
+        });
+      },
     );
   }
 }
